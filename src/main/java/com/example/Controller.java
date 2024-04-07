@@ -1,6 +1,8 @@
 package com.example;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -52,9 +54,6 @@ public class Controller {
         @SuppressWarnings("deprecation")
         Locale locale_ja = new Locale("ja", "JP");
 
-        System.out.println("init");
-
-        comboBoxLanguage = new ComboBox<>();
         comboBoxLanguage.getItems().addAll("English", "Farsi", "Japanese");
         comboBoxLanguage.setValue("English");
 
@@ -67,11 +66,11 @@ public class Controller {
             } else {
                 bundle = ResourceBundle.getBundle("messages", locale_en);
             }
-            updateUI(); // Update UI components
+            updateUI();
         });
 
         bundle = ResourceBundle.getBundle("messages", locale_en);
-        updateUI(); // Update UI components
+        updateUI();
 
         button.setOnAction(e -> saveData());
     }
@@ -97,8 +96,8 @@ public class Controller {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String jdbcUrl = "jdbc:mysql://localhost:3306/fxdemo";
-            Connection conn = DriverManager.getConnection(jdbcUrl, "root", "Test12");
+            String jdbcUrl = "jdbc:mysql://localhost:3306/table_localization";
+            Connection conn = DriverManager.getConnection(jdbcUrl, "root", "root");
 
             String tableName;
             switch (selectedLanguage) {
@@ -109,7 +108,7 @@ public class Controller {
                     tableName = "employee_ja";
                     break;
                 default:
-                    tableName = "employee_en"; // Default to English
+                    tableName = "employee_en";
             }
 
             String sql = "INSERT INTO " + tableName + " (first_name, last_name, email) VALUES (?, ?, ?)";
@@ -121,6 +120,16 @@ public class Controller {
             System.out.println(bundle.getString("message.saved"));
             conn.close();
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText(bundle.getString("message.saved"));
+            alert.showAndWait();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

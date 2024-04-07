@@ -13,7 +13,7 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("display.fxml"));
         Parent root = loader.load();
 
-        stage.setTitle("asdasd");
+        stage.setTitle("Database Localization");
         stage.setScene(new Scene(root));
         stage.setResizable(false);
         stage.show();
